@@ -1,0 +1,7 @@
+#!/bin/bash
+
+easy_goer_detect() {
+  # Detect architecture.
+  export easy_goer_arch="$(uname -m)"
+  export easy_goer_os="$(uname -s | tr 'A-Z' 'a-z')"
+}

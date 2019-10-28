@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# The command itself.
+easy_goer_help() {
+  cat <<EOF
+Usage:
+  go-easy <command> [options] [arguments]
+
+Commands:
+  # List known versions
+  go-easy known
+
+  # Install a version
+  go-easy install [options] <version> <path>
+    -a ARCH   Force a different architecture (ignore detection)
+    -o OS     Force a different OS (ignore detection)
+EOF
+}
+
+# If invoked directly, do the job.
+if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
+  easy_goer_help "${@}"
+fi

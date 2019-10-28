@@ -1,0 +1,32 @@
+#!/bin/bash
+
+# Detect root if needed.
+if [[ -z "${ROOT}" ]]; then
+  ROOT="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")/.." && pwd)"
+fi
+
+# Load lib.
+source "${ROOT}/util/detect"
+
+# The command itself.
+easy_goer_known() {
+  local file= version=
+
+  # Detect OS & architecture.
+  easy_goer_detect
+
+  # Walk known definitions.
+  shopt -s nullglob
+  for file in "${ROOT}/db"/*/${easy_goer_os}/${easy_goer_arch}/url; do
+    version="${file}"
+    version="${version%/*/*/*}"
+    version="${version##*/}"
+    echo "${version}"
+  done | sort -V
+  shopt -u nullglob
+}
+
+# If invoked directly, do the job.
+if [[ "${BASH_SOURCE[0]}" = "${0}" ]]; then
+  easy_goer_known "${@}"
+fi

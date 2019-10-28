@@ -1,0 +1,49 @@
+#!/bin/bash
+
+easy_goer_sha1() {
+  if type -p sha1sum >/dev/null 2>&1; then
+    sha1sum "${@}" | cut -d' ' -f1
+  elif type -p shasum >/dev/null 2>&1; then
+    shasum -a1 "${@}" | cut -d' ' -f1
+  elif type -p openssl >/dev/null 2>&1; then
+    openssl dgst -r -sha1 "${@}" | cut -d' ' -f1
+  else
+    echo '(error)'
+  fi
+}
+
+easy_goer_sha256() {
+  if type -p sha256sum >/dev/null 2>&1; then
+    sha256sum "${@}" | cut -d' ' -f1
+  elif type -p shasum >/dev/null 2>&1; then
+    shasum -a256 "${@}" | cut -d' ' -f1
+  elif type -p openssl >/dev/null 2>&1; then
+    openssl dgst -r -sha256 "${@}" | cut -d' ' -f1
+  else
+    echo '(error)'
+  fi
+}
+
+
+easy_goer_check_file() {
+  # If file does not exist or not readable - abort.
+  if [[ ! -r "${1}" ]]; then
+    return 1
+  fi
+
+  # Figure out checksum type.
+  if [[ "${#2}" = 64 ]]; then
+    export easy_goer_checksum="$(easy_goer_sha256 "${1}")"
+  elif [[ "${#2}" = 40 ]]; then
+    export easy_goer_checksum="$(easy_goer_sha1 "${1}")"
+  else
+    export easy_goer_checksum='(error)'
+  fi
+
+  # Compare.
+  if [[ "${easy_goer_checksum}" = "${2}" ]]; then
+    return 0
+  fi
+
+  return 1
+}

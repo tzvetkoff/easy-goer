@@ -1,0 +1,21 @@
+#!/bin/bash
+
+ROOT="$(cd "$(dirname "$(realpath "${BASH_SOURCE[0]}")")" && pwd)"
+
+source "${ROOT}/commands/help"
+source "${ROOT}/commands/known"
+source "${ROOT}/commands/install"
+
+command="${1}"
+shift
+
+case "${command}" in
+  i|install)
+    easy_goer_install "${@}";;
+  k|known)
+    easy_goer_known "${@}";;
+  h|help)
+    easy_goer_help "${@}";;
+  *)
+    easy_goer_help "${@}"; exit 1;;
+esac
