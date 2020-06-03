@@ -3,7 +3,7 @@ GEM
   specs:
     awesome_print (1.8.0)
     mini_portile2 (2.4.0)
-    nokogiri (1.10.8)
+    nokogiri (1.10.9)
       mini_portile2 (~> 2.4.0)
 
 PLATFORMS
@@ -14,4 +14,4 @@ DEPENDENCIES
   nokogiri (> 0)
 
 BUNDLED WITH
-   1.17.3
+   2.1.4
