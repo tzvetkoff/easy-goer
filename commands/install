@@ -99,8 +99,8 @@ easy_goer_install() {
     fi
 
     # Download and recheck.
-    curl "${url}" > "./${basename}"
-    if ! easy_goer_checksum "./${basename}" "${checksum}"; then
+    curl -SL "${url}" > "./${basename}"
+    if ! easy_goer_check_file "./${basename}" "${checksum}"; then
       echo "go-easy install: file ${ROOT}/tmp/${basename} checksum mismatch" >&2
       echo "  expected: ${checksum}" >&2
       echo "    actual: ${easy_goer_checksum}" >&2

@@ -24,7 +24,6 @@ easy_goer_sha256() {
   fi
 }
 
-
 easy_goer_check_file() {
   # If file does not exist or not readable - abort.
   if [[ ! -r "${1}" ]]; then
