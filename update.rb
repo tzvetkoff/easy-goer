@@ -26,13 +26,16 @@ end
 
 doc = Nokogiri::HTML(body)
 
-new_versions = doc.xpath('//a[starts-with(@href, "https://dl.google.com/go/")]/parent::td/parent::tr').to_a
+new_versions = doc.xpath('//a[starts-with(@href, "/dl/")]/parent::td/parent::tr').to_a
+
 new_versions.map! do |tr|
   url = tr.xpath('./td/a').first.attribute('href').value
   next unless url
 
-  match = url.scan(%r{ ^https://dl.google.com/go/go(\d+\.\d+(?:\.\d+)?)\.(\w+)-(\w+).tar.gz }x)
+  match = url.scan(%r{ ^/dl/go(\d+\.\d+(?:\.\d+)?)\.(\w+)-(\w+).tar.gz }x)
   next unless match
+
+  url = "https://golang.org#{url}"
 
   ver, os, arch = match.first
   next unless ver
