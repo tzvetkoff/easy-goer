@@ -9,3 +9,7 @@ Some ideas taken from [ruby-build](https://github.com/rbenv/ruby-build) and the 
 ``` sh
 ./go-easy install 1.14.6 ~/go1.14.6
 ```
+
+## License
+
+The code is subject to the [MIT license](https://opensource.org/licenses/MIT).
