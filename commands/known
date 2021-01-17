@@ -10,14 +10,15 @@ source "${ROOT}/util/detect"
 
 # The command itself.
 easy_goer_known() {
-  local file= version=
+  local file='' version=''
 
   # Detect OS & architecture.
   easy_goer_detect
 
   # Walk known definitions.
   shopt -s nullglob
-  for file in "${ROOT}/db"/*/${easy_goer_os}/${easy_goer_arch}/url; do
+  # shellcheck disable=SC2154
+  for file in "${ROOT}/db"/*/"${easy_goer_os}/${easy_goer_arch}/url"; do
     version="${file}"
     version="${version%/*/*/*}"
     version="${version##*/}"

@@ -32,12 +32,13 @@ easy_goer_check_file() {
 
   # Figure out checksum type.
   if [[ "${#2}" = 64 ]]; then
-    export easy_goer_checksum="$(easy_goer_sha256 "${1}")"
+    easy_goer_checksum="$(easy_goer_sha256 "${1}")"
   elif [[ "${#2}" = 40 ]]; then
-    export easy_goer_checksum="$(easy_goer_sha1 "${1}")"
+    easy_goer_checksum="$(easy_goer_sha1 "${1}")"
   else
-    export easy_goer_checksum='(error)'
+    easy_goer_checksum='(error)'
   fi
+  export easy_goer_checksum
 
   # Compare.
   if [[ "${easy_goer_checksum}" = "${2}" ]]; then

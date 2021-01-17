@@ -12,25 +12,22 @@ source "${ROOT}/util/check_file"
 # The command itself.
 easy_goer_install() {
   # Parse options and arguments.
-  local args=() os= arch= version= dir= parse=true pkg_dir= url_file= url= checksum_file= checksum= basename=
+  local args=() os='' arch='' version='' dir='' parse=true pkg_dir='' url_file='' url='' checksum_file='' checksum='' basename=''
 
   while [[ -n "${1}" ]]; do
     if ${parse}; then
       case "${1}" in
-        -a)
-          arch="${2}"; shift;;
-        -a*)
-          arch="${1:2}";;
-        -o)
-          os="${2}"; shift;;
-        -o*)
-          os="${2:2}"; shift;;
-        --)
-          parse=false;;
-        -*)
-          echo "go-easy install: invalid option: ${1}" >&2; exit 1;;
-        *)
-          args+=("${1}");;
+        -a)  arch="${2}"; shift;;
+        -a*) arch="${1:2}";;
+        -o)  os="${2}"; shift;;
+        -o*) os="${1:2}"; shift;;
+        -u)  url="${2}"; shift;;
+        -u*) url="${1:2}"; shift;;
+        -s)  checksum="${2}"; shift;;
+        -s*) checksum="${1:2}"; shift;;
+        --)  parse=false;;
+        -*)  echo "go-easy install: invalid option: ${1}" >&2; exit 1;;
+        *)   args+=("${1}");;
       esac
     else
       args+=("${1}")
@@ -59,35 +56,44 @@ easy_goer_install() {
 
   # Detect OS & architecture.
   easy_goer_detect
-  os="${arch:-$easy_goer_os}"
-  arch="${arch:-$easy_goer_arch}"
+  os="${arch:-${easy_goer_os}}"
+  arch="${arch:-${easy_goer_arch}}"
 
-  # Get URL & checksum.
+  # Package dir.
   pkg_dir="${ROOT}/db/${version}/${os}/${arch}"
-  url_file="${pkg_dir}/url"
-  checksum_file="${pkg_dir}/checksum"
 
-  if [[ ! -f "${url_file}" ]]; then
-    echo "go-easy install: unknown version: ${version}: file ${url_file} does not exist" >&2
-    exit 1
-  fi
-  url=$(< "${url_file}")
+  # Get URL.
+  if [[ -z "${url}" ]]; then
+    url_file="${pkg_dir}/url"
+    if [[ ! -f "${url_file}" ]]; then
+      echo "go-easy install: unknown version: ${version}: file ${url_file} does not exist" >&2
+      exit 1
+    fi
 
-  if [[ ! -f "${checksum_file}" ]]; then
-    echo "go-easy install: unknown version: ${version}: file ${checksum_file} does not exist" >&2
-    exit 1
+    url=$(< "${url_file}")
   fi
-  checksum=$(< "${checksum_file}")
+
+  # Get checksum.
+  if [[ -z "${checksum}" ]]; then
+    checksum_file="${pkg_dir}/checksum"
+    if [[ ! -f "${checksum_file}" ]]; then
+      echo "go-easy install: unknown version: ${version}: file ${checksum_file} does not exist" >&2
+      exit 1
+    fi
+
+    checksum=$(< "${checksum_file}")
+  fi
 
   # Figure out basename.
   basename="${url##*/}"
 
   # Install time.
   mkdir -p "${ROOT}/tmp"
-  cd "${ROOT}/tmp"
+  cd "${ROOT}/tmp" || exit 1
 
   # Check if file already exists and matches the checksum.
   if ! easy_goer_check_file "./${basename}" "${checksum}"; then
+    # shellcheck disable=SC2154
     if [[ -z "${easy_goer_checksum}" ]]; then
       echo "go-easy install: file ${ROOT}/tmp/${basename} missing - downloading from ${url}" >&2
     else

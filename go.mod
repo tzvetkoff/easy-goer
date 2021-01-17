@@ -1,3 +1,3 @@
 module github.com/tzvetkoff/easy-goer
 
-go 1.14
+go 1.15

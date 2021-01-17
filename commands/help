@@ -14,6 +14,8 @@ Commands:
   go-easy install [options] <version> <path>
     -a ARCH   Force a different architecture (ignore detection)
     -o OS     Force a different OS (ignore detection)
+    -u URL    Install from a different URL (don't read known versions DB)
+    -s SUM    Verify against provided checksum (don't read known versions DB)
 EOF
 }
 
