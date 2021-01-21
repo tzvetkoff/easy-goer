@@ -6,7 +6,9 @@ if [[ -z "${ROOT}" ]]; then
 fi
 
 # Load lib.
+# shellcheck disable=SC1090
 source "${ROOT}/util/detect"
+# shellcheck disable=SC1090
 source "${ROOT}/util/check_file"
 
 # The command itself.
