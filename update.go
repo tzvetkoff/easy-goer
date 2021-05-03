@@ -34,21 +34,21 @@ type semver struct {
 
 type version struct {
 	url      string
-	version  *semver
+	semver   *semver
 	os       string
 	arch     string
 	checksum string
 }
 
 func (v *version) str() string {
-	if v.version.patch >= 0 {
-		return fmt.Sprintf("%d.%d.%d/%s/%s", v.version.major, v.version.minor, v.version.patch, v.os, v.arch)
+	if v.semver.patch >= 0 {
+		return fmt.Sprintf("%d.%d.%d/%s/%s", v.semver.major, v.semver.minor, v.semver.patch, v.os, v.arch)
 	}
 
-	return fmt.Sprintf("%d.%d/%s/%s", v.version.major, v.version.minor, v.os, v.arch)
+	return fmt.Sprintf("%d.%d/%s/%s", v.semver.major, v.semver.minor, v.os, v.arch)
 }
 
-func newVersion(s string) *semver {
+func newSemVer(s string) *semver {
 	matches := parseVersionExpr.FindStringSubmatch(s)
 	if matches == nil {
 		return nil
@@ -175,7 +175,7 @@ func main() {
 
 		ver := &version{
 			url:      "https://golang.org" + match[1],
-			version:  newVersion(match[2]),
+			semver:   newSemVer(match[2]),
 			os:       match[3],
 			arch:     match[4],
 			checksum: match[5],
@@ -184,7 +184,7 @@ func main() {
 	}
 
 	sort.Slice(newVersions, func(a int, b int) bool {
-		return compare(newVersions[a].version, newVersions[b].version) == -1
+		return compare(newVersions[a].semver, newVersions[b].semver) == -1
 	})
 
 	// get known versions from fs ...
@@ -200,7 +200,7 @@ func main() {
 
 		ver := &version{
 			url:      read(path + "/url"),
-			version:  newVersion(segments[0]),
+			semver:   newSemVer(segments[0]),
 			os:       segments[1],
 			arch:     segments[2],
 			checksum: read(path + "/checksum"),
@@ -209,7 +209,7 @@ func main() {
 	}
 
 	sort.Slice(oldVersions, func(a int, b int) bool {
-		return compare(oldVersions[a].version, oldVersions[b].version) == -1
+		return compare(oldVersions[a].semver, oldVersions[b].semver) == -1
 	})
 
 	// remove everything ...
@@ -225,11 +225,11 @@ func main() {
 
 		for idx, oldVersion := range oldVersions {
 			same = oldVersion.url == newVersion.url &&
-				compare(oldVersion.version, newVersion.version) == 0 &&
+				compare(oldVersion.semver, newVersion.semver) == 0 &&
 				oldVersion.os == newVersion.os &&
 				oldVersion.arch == newVersion.arch &&
 				oldVersion.checksum == newVersion.checksum
-			existing = compare(oldVersion.version, newVersion.version) == 0 &&
+			existing = compare(oldVersion.semver, newVersion.semver) == 0 &&
 				oldVersion.os == newVersion.os &&
 				oldVersion.arch == newVersion.arch
 
