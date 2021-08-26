@@ -22,11 +22,11 @@ easy_goer_install() {
         -a)  arch="${2}"; shift;;
         -a*) arch="${1:2}";;
         -o)  os="${2}"; shift;;
-        -o*) os="${1:2}"; shift;;
+        -o*) os="${1:2}";;
         -u)  url="${2}"; shift;;
-        -u*) url="${1:2}"; shift;;
+        -u*) url="${1:2}";;
         -s)  checksum="${2}"; shift;;
-        -s*) checksum="${1:2}"; shift;;
+        -s*) checksum="${1:2}";;
         --)  parse=false;;
         -*)  echo "go-easy install: invalid option: ${1}" >&2; exit 1;;
         *)   args+=("${1}");;

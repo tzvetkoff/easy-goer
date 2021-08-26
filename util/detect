@@ -3,7 +3,10 @@
 easy_goer_detect() {
   # Detect architecture.
   easy_goer_arch="$(uname -m)"
+  [[ "${easy_goer_arch}" = 'aarch64' ]] && easy_goer_arch='arm64'
   export easy_goer_arch
+
+  # Detect OS.
   easy_goer_os="$(uname -s | tr '[:upper:]' '[:lower:]')"
   export easy_goer_os
 }
