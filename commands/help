@@ -8,7 +8,9 @@ Usage:
 
 Commands:
   # List known versions
-  go-easy known
+  go-easy known [options]
+    -a ARCH   Force a different architecture (ignore detection)
+    -o OS     Force a different OS (ignore detection)
 
   # Install a version
   go-easy install [options] <version> <path>

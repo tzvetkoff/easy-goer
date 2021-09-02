@@ -6,20 +6,47 @@ if [[ -z "${ROOT}" ]]; then
 fi
 
 # Load lib.
-# shellcheck disable=SC1090
+# shellcheck disable=SC1091
 source "${ROOT}/util/detect"
 
 # The command itself.
 easy_goer_known() {
-  local file='' version=''
+  local args=() os='' arch='' file='' version='' parse='true'
+
+  while [[ -n "${1}" ]]; do
+    if ${parse}; then
+      case "${1}" in
+        -a)  arch="${2}"; shift;;
+        -a*) arch="${1:2}";;
+        -o)  os="${2}"; shift;;
+        -o*) os="${1:2}";;
+        -h)  easy_goer_help; return 0;;
+        --)  parse=false;;
+        -*)  echo "go-easy known: invalid option: ${1}" >&2; echo >&2; easy_goer_help >&2; return 1;;
+        *)   args+=("${1}");;
+      esac
+    else
+      args+=("${1}")
+    fi
+
+    shift
+  done
+
+  # Check arguments count.
+  if [[ ${#args[@]} != 0 ]]; then
+    echo "go-easy known: wrong number of arguments (given ${#}, expected 0)" >&2
+    return 1
+  fi
 
   # Detect OS & architecture.
   easy_goer_detect
+  os="${os:-${easy_goer_os}}"
+  arch="${arch:-${easy_goer_arch}}"
 
   # Walk known definitions.
   shopt -s nullglob
   # shellcheck disable=SC2154
-  for file in "${ROOT}/db"/*/"${easy_goer_os}/${easy_goer_arch}/url"; do
+  for file in "${ROOT}/db"/*/"${os}/${arch}/url"; do
     version="${file}"
     version="${version%/*/*/*}"
     version="${version##*/}"
