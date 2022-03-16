@@ -139,16 +139,16 @@ func main() {
 	root, err := os.Getwd()
 	pancake(err)
 
-	// fetch https://golang.org/dl/ ...
+	// fetch https://go.dev/dl/ ...
 
 	body := ""
 	if exists(root + "/tmp/dl.html") {
 		msg("Using cache: #{root}/tmp/dl.html", yellow)
 		body = read(root + "/tmp/dl.html")
 	} else {
-		msg("Fetching https://golang.org/dl/", green)
+		msg("Fetching https://go.dev/dl/", green)
 
-		response, err := http.Get("https://golang.org/dl/")
+		response, err := http.Get("https://go.dev/dl/")
 		pancake(err)
 		defer response.Body.Close()
 
@@ -174,7 +174,7 @@ func main() {
 		}
 
 		ver := &version{
-			url:      "https://golang.org" + match[1],
+			url:      "https://go.dev" + match[1],
 			semver:   newSemVer(match[2]),
 			os:       match[3],
 			arch:     match[4],
