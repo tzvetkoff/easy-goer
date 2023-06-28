@@ -123,7 +123,7 @@ func read(path string) string {
 }
 
 func write(path string, data string) {
-	err := ioutil.WriteFile(path, []byte(data), 0644)
+	err := ioutil.WriteFile(path, []byte(data), 0o644)
 	pancake(err)
 }
 
@@ -132,7 +132,7 @@ func rimraf(path string) {
 }
 
 func mkdirp(path string) {
-	os.MkdirAll(path, 0755)
+	os.MkdirAll(path, 0o755)
 }
 
 func main() {
@@ -219,6 +219,7 @@ func main() {
 
 	// create them anew ...
 
+	hasChanges := false
 	for _, newVersion := range newVersions {
 		same := false
 		existing := false
@@ -243,8 +244,10 @@ func main() {
 			msg("Keep    " + newVersion.str())
 		} else if existing {
 			msg("Freshen "+newVersion.str(), yellow)
+			hasChanges = true
 		} else {
 			msg("Create  "+newVersion.str(), green)
+			hasChanges = true
 		}
 
 		mkdirp(root + "/db/" + newVersion.str())
@@ -256,5 +259,15 @@ func main() {
 
 	for _, oldVersion := range oldVersions {
 		msg("Remove  "+oldVersion.str(), red)
+	}
+
+	// exit code ...
+
+	msg("")
+	if hasChanges {
+		msg("New versions available!")
+	} else {
+		msg("Nothing new.", red)
+		os.Exit(1)
 	}
 }
