@@ -1,0 +1,27 @@
+name: 'Cron: Auto-update'
+
+on:
+  schedule:
+  - cron: '0 */6 * * *'
+  workflow_dispatch: {}
+
+jobs:
+  auto-update:
+    runs-on: 'ubuntu-latest'
+    steps:
+    - uses: 'actions/checkout@v4'
+    - uses: 'actions/setup-go@v4'
+    - id: 'check-for-updates'
+      name: 'Check for updates'
+      run: |
+        if go run update.go; then
+          echo "updated=true" >> ${GITHUB_OUTPUT}
+        fi
+    - if: steps.check-for-updates.outputs.updated == 'true'
+      run: |
+        git config --global user.name 'Latchezar Tzvetkoff [Auto]'
+        git config --global user.email 'latchezar@tzvetkoff.net'
+        git config --global credential.helper '!p() { echo username=${{ secrets.GH_USERNAME }} ; echo password=${{ secrets.GH_PASSWORD }}; }; p'
+        git add .
+        git commit -m 'Auto-update'
+        git push origin master
