@@ -6,9 +6,9 @@ if [[ -z "${ROOT}" ]]; then
 fi
 
 # Load lib.
-# shellcheck disable=SC1091
+# shellcheck disable=1091
 source "${ROOT}/util/detect"
-# shellcheck disable=SC1091
+# shellcheck disable=1091
 source "${ROOT}/util/check_file"
 
 # The command itself.
@@ -94,7 +94,7 @@ easy_goer_install() {
 
   # Check if file already exists and matches the checksum.
   if ! easy_goer_check_file "./${basename}" "${checksum}"; then
-    # shellcheck disable=SC2154
+    # shellcheck disable=2154
     if [[ -z "${easy_goer_checksum}" ]]; then
       echo "go-easy install: file ${ROOT}/tmp/${basename} missing - downloading from ${url}" >&2
     else
