@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 easy_goer_sha1() {
   if type -p sha1sum >/dev/null 2>&1; then

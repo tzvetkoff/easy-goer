@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Detect root if needed.
 if [[ -z "${ROOT}" ]]; then
